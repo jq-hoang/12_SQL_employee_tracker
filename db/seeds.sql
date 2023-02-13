@@ -1,23 +1,28 @@
 INSERT INTO departments (name) 
 VALUES 
-  ('Sales'), 
+  ('Creative'), 
   ('Marketing'), 
-  ('IT');
+  ('Production');
 
 INSERT INTO roles (title, salary, department_id) 
 VALUES 
   ('Sales Manager', 50000, 1), 
-  ('Marketing Manager', 60000, 2), 
-  ('IT Manager', 80000, 3), 
-  ('Sales Associate', 35000, 1), 
-  ('Marketing Coordinator', 45000, 2), 
-  ('IT Support', 55000, 3);
+  ('Marketing Manager', 80000, 2), 
+  ('Production Manager', 90000, 3), 
+  ('Content Creator', 95000, 1), 
+  ('Social Media Strategist', 65000, 2), 
+  ('Animator', 75000, 3), 
+  ('Graphic Designer', 75000, 1);
 
 INSERT INTO employees (first_name, last_name, role_id) 
 VALUES 
   ('John', 'Doe', 1), 
   ('Jane', 'Doe', 2), 
-  ('Jim', 'Smith', 3), 
+  ('Why', 'Doe', 3), 
   ('Ciara', 'Johnson', 4), 
   ('Janna', 'Giang', 5), 
-  ('Emily', 'Davis', 6);
+  ('Emily', 'Rice', 6),
+  ('Lina', 'Le', 7), 
+  ('Hiro', 'Nakamura', 4), 
+  ('Samantha', 'Smith', 3), 
+  ('Tom', 'Park', 7);

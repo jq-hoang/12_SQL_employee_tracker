@@ -131,7 +131,40 @@ async function handleAddEmployee() {
   main();
 }
 
-function handleUpdateEmployee() {}
+async function handleUpdateEmployee() {
+  // Get all employees and display them
+  const [employees] = await DBConnection.promise().query("SELECT * FROM employees");
+  console.table(employees);
+
+  // Ask user which employee to update
+  const { employee } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "employee",
+      message: "Which employee's role would you like to update?",
+      choices: employees.map((employee) => ({ name: `${employee.first_name} ${employee.last_name}`, value: employee.id })),
+    },
+  ]);
+
+  // Get all roles
+  const [roles] = await DBConnection.promise().query("SELECT * FROM roles");
+
+  // Ask user for the new role for the selected employee
+  const { role } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "role",
+      message: "What is the new role for the employee?",
+      choices: roles.map((roles) => ({ name: roles.title, value: roles.id })),
+    },
+  ]);
+
+  // Update the employee's role
+  await DBConnection.promise().query("UPDATE employees SET role_id = ? WHERE id = ?", [role, employee]);
+  console.log(`Employee's role has been updated to ${role}`);
+
+  main();
+}
 
 function handleMenuSelection(menuSelection) {
   switch (menuSelection) {
