@@ -1,4 +1,35 @@
 const inquirer = require("inquirer");
+const mysql = require("mysql2");
+
+const DBConnection = mysql.createConnection(
+  {
+    host: "localhost",
+    user: "root",
+    password: "password",
+    database: "employee_db",
+  },
+  console.log(`Connected to the employee_db database.`)
+);
+
+const rolesSQLQuery = `SELECT 
+roles.*,
+departments.name as department_name
+FROM 
+roles 
+INNER JOIN departments ON roles.department_id = departments.id;`;
+
+const employeesSQLQuery = `SELECT 
+employees.*, 
+roles.title as role_title, 
+roles.salary, 
+departments.name as department_name,
+managers.first_name as manager_first_name,
+managers.last_name as manager_last_name
+FROM 
+employees 
+INNER JOIN roles ON employees.role_id = roles.id
+INNER JOIN departments ON roles.department_id = departments.id
+LEFT JOIN employees as managers ON employees.manager_id = managers.id;`;
 
 async function showQuestions() {
   return inquirer.prompt([
@@ -19,9 +50,23 @@ async function showQuestions() {
   ]);
 }
 
-function handleGetAllDepartments() {}
-function handleGetAllRoles() {}
-function handleGetAllEmployees() {}
+async function handleGetAllDepartments() {
+  const [rows] = await DBConnection.promise().query("SELECT * FROM departments");
+  console.table(rows);
+  main();
+}
+
+async function handleGetAllRoles() {
+  const [rows] = await DBConnection.promise().query(rolesSQLQuery);
+  console.table(rows);
+  main();
+}
+
+async function handleGetAllEmployees() {
+  const [rows] = await DBConnection.promise().query(employeesSQLQuery);
+  console.table(rows);
+  main();
+}
 
 async function handleAddDepartment() {
   const answers = await inquirer.prompt([
@@ -43,15 +88,15 @@ async function handleAddRole() {
       message: "What is the new role's name?",
     },
     {
-        type: "input",
-        name: "salary",
-        message: "What is the new role's salary?",
+      type: "input",
+      name: "salary",
+      message: "What is the new role's salary?",
     },
     {
-        type: "input",
-        name: "department",
-        message: "Which department does this role belong to?",
-    }
+      type: "input",
+      name: "department",
+      message: "Which department does this role belong to?",
+    },
   ]);
   console.log("answers ~>", answers);
   main();
