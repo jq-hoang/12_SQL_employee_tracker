@@ -1,0 +1,60 @@
+Menu Selection: 
+Get All Departments
+Get All Roles
+Get All Employees
+
+Add A Department
+Add a Role
+Add an Employee
+
+Update an Employee's Role
+
+=================================================================================
+=================================================================================
+
+view all departments:
+Present a formatted table showing the department names and ids
+
+=================================================================================
+=================================================================================
+
+View All Roles:
+Present a formatted table showing the job title, role id, the department that role belongs to, and the salary for that role
+
+=================================================================================
+=================================================================================
+
+ View all employees:
+ Present a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+
+=================================================================================
+=================================================================================
+
+ Add a department:
+ Prompt the user to enter the name of the department
+ Add the department to the database
+
+=================================================================================
+=================================================================================
+
+ Add a role:
+ Prompt the user to enter the name, salary, and department for the role
+ Add the role to the database
+
+=================================================================================
+=================================================================================
+
+ Add an employee:
+ Prompt the user to enter the employee’s first name, last name, role, and manager
+ Add the employee to the database
+
+=================================================================================
+=================================================================================
+
+ Update an employee role:
+ Prompt the user to select an employee to update and their new role
+ Update the information in the database
+
+=================================================================================
+=================================================================================
+
