@@ -14,15 +14,15 @@ VALUES
   ('Animator', 75000, 3), 
   ('Graphic Designer', 75000, 1);
 
-INSERT INTO employees (first_name, last_name, role_id) 
+INSERT INTO employees (first_name, last_name, role_id, manager_id) 
 VALUES 
-  ('John', 'Doe', 1), 
-  ('Jane', 'Doe', 2), 
-  ('Why', 'Doe', 3), 
-  ('Ciara', 'Johnson', 4), 
-  ('Janna', 'Giang', 5), 
-  ('Emily', 'Rice', 6),
-  ('Lina', 'Le', 7), 
-  ('Hiro', 'Nakamura', 4), 
-  ('Samantha', 'Smith', 3), 
-  ('Tom', 'Park', 7);
+  ('John', 'Doe', 1, NULL), 
+  ('Jane', 'Doe', 2, 1), 
+  ('Why', 'Doe', 3, 1), 
+  ('Ciara', 'Johnson', 4, 1), 
+  ('Janna', 'Giang', 5, 1), 
+  ('Emily', 'Rice', 6, 1),
+  ('Lina', 'Le', 7, 1), 
+  ('Hiro', 'Nakamura', 4, 1), 
+  ('Samantha', 'Smith', 3, 1), 
+  ('Tom', 'Park', 7, 1);

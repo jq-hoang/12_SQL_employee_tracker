@@ -11,6 +11,9 @@ const DBConnection = mysql.createConnection(
   console.log(`Connected to the employee_db database.`)
 );
 
+// how to create helpers ?
+// store all these queries in a helper and import them to be called upon ??
+
 const rolesSQLQuery = `SELECT 
 roles.*,
 departments.name as department_name
@@ -30,6 +33,8 @@ employees
 INNER JOIN roles ON employees.role_id = roles.id
 INNER JOIN departments ON roles.department_id = departments.id
 LEFT JOIN employees as managers ON employees.manager_id = managers.id;`;
+// is there a simpler way? This SQL query took way too long to figure out how to do.
+// how to implement managers into this? MOdify schema to include  manager crows foot??
 
 async function showQuestions() {
   return inquirer.prompt([
@@ -51,7 +56,9 @@ async function showQuestions() {
 }
 
 async function handleGetAllDepartments() {
-  const [rows] = await DBConnection.promise().query("SELECT * FROM departments");
+  const [rows] = await DBConnection.promise().query(
+    "SELECT * FROM departments"
+  );
   console.table(rows);
   main();
 }
@@ -76,11 +83,22 @@ async function handleAddDepartment() {
       message: "What's the department's name?",
     },
   ]);
-  console.log("answers ~>", answers);
+
+  try {
+    const query = `INSERT INTO departments (name) VALUES (?)`;
+    await DBConnection.promise().query(query, [answers.departmentName]);
+    console.log(`Successfully added the new department: ${answers.departmentName}`);
+  } catch (error) {
+    console.error(`Error adding new department: ${error}`);
+  }
+
   main();
 }
 
+
 async function handleAddRole() {
+  const [departments] = await DBConnection.promise().query("SELECT id, name FROM departments");
+  console.log('departments ~>', departments);
   const answers = await inquirer.prompt([
     {
       type: "input",
@@ -93,47 +111,86 @@ async function handleAddRole() {
       message: "What is the new role's salary?",
     },
     {
-      type: "input",
-      name: "department",
+      type: "list",
+      name: "departmentId",
       message: "Which department does this role belong to?",
+      choices: departments.map((department) => ({
+        name: department.name,
+        value: department.id,
+      })),
     },
   ]);
-  console.log("answers ~>", answers);
+
+  try {
+    const query = `INSERT INTO roles (title, salary, department_id)
+                   VALUES (?, ?, ?)`;
+    await DBConnection.promise().query(query, [
+      answers.roleName,
+      answers.salary,
+      answers.departmentId,
+    ]);
+    console.log(`Successfully added the new role: ${answers.roleName}`);
+  } catch (error) {
+    console.error(`Error adding new role: ${error}`);
+  }
   main();
 }
+
 
 async function handleAddEmployee() {
-  const answers = await inquirer.prompt([
+
+  const [roles] = await DBConnection.promise().query(
+    "SELECT * FROM roles"
+  );
+
+  // const [managers] = await DBConnection.promise().query(
+  //   "SELECT CONCAT(first_name, ' ', last_name) as Managers FROM employees"
+  // );
+
+  // const roleChoices = await getRoles();
+  // const managerChoices = await getManagers();
+
+  const { first_name, last_name, role, manager } = await inquirer.prompt([
     {
       type: "input",
-      name: "employeeFirstName",
-      message: "What is the employee's First name?",
+      name: "first_name",
+      message: "What is the employee's first name?",
     },
     {
       type: "input",
-      name: "employeeLastName",
+      name: "last_name",
       message: "What is the employee's last name?",
     },
-
     {
-      type: "input",
-      name: "employeeRole",
+      type: "list",
+      name: "role",
       message: "What is the employee's role?",
-    },
-    {
-      type: "input",
-      name: "employeeManager",
-      message: "Who is the employee's manager?",
+      choices: roles.map((role) => ({
+        name: role.title,
+        value: role.id,
+      })),
     },
   ]);
 
-  console.log("answers ~>", answers);
+  try {
+    const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+                   VALUES (?, ?, ?, ?)`;
+    await DBConnection.promise().query(query, [first_name, last_name, role, manager]);
+    console.log(`Successfully added the new employee: ${first_name} ${last_name}`);
+  } catch (error) {
+    console.error(`Error adding new employee: ${error}`);
+  }
+
   main();
 }
+
+
 
 async function handleUpdateEmployee() {
   // Get all employees and display them
-  const [employees] = await DBConnection.promise().query("SELECT * FROM employees");
+  const [employees] = await DBConnection.promise().query(
+    "SELECT * FROM employees"
+  );
   console.table(employees);
 
   // Ask user which employee to update
@@ -142,7 +199,10 @@ async function handleUpdateEmployee() {
       type: "list",
       name: "employee",
       message: "Which employee's role would you like to update?",
-      choices: employees.map((employee) => ({ name: `${employee.first_name} ${employee.last_name}`, value: employee.id })),
+      choices: employees.map((employee) => ({
+        name: `${employee.first_name} ${employee.last_name}`,
+        value: employee.id,
+      })),
     },
   ]);
 
@@ -160,7 +220,10 @@ async function handleUpdateEmployee() {
   ]);
 
   // Update the employee's role
-  await DBConnection.promise().query("UPDATE employees SET role_id = ? WHERE id = ?", [role, employee]);
+  await DBConnection.promise().query(
+    "UPDATE employees SET role_id = ? WHERE id = ?",
+    [role, employee]
+  );
   console.log(`Employee's role has been updated to ${role}`);
 
   main();
