@@ -1,7 +1,7 @@
 # 12 SQL: Employee Tracker
 
-[Github Link](https://github.com/jq-hoang/12_SQL_employee_tracker)
-[Video of Application in Action:](https://drive.google.com/file/d/1X9kCAuYNuo3ACfd5u4H6YtKmiifaHfd5/view)
+## [Github Link](https://github.com/jq-hoang/12_SQL_employee_tracker)
+## [Video of Application in Action:](https://drive.google.com/file/d/1X9kCAuYNuo3ACfd5u4H6YtKmiifaHfd5/view)
 
 
 ## My Task: 
